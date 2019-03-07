@@ -25,7 +25,7 @@ class Task(object):
 
 
 
-	def update(self):
+	def update(self) -> list:
 		conection = sqlite3.connect('todo.db')
 		cursor = conection.cursor()
 		cursor.execute("UPDATE all_task SET task='%s' WHERE rowid = %s"%(self.title,self.id))
@@ -36,7 +36,7 @@ class Task(object):
 		conection.close()
 		return rows
 
-	def done(self):
+	def done(self) -> list:
 		conection = sqlite3.connect('todo.db')
 		cursor = conection.cursor()
 		cursor.execute("UPDATE all_task SET state= 'done' WHERE rowid = %s"%(self.id))
@@ -63,7 +63,7 @@ class Task(object):
 		print("All task are successfully deleted")
 
 	@staticmethod
-	def get_all():
+	def get_all() -> list:
 		try:
 			cursor = conection.cursor()
 			cursor.execute("SELECT rowid,task,state FROM all_task")

@@ -7,7 +7,7 @@ from task import Task
 
 
 
-def insert(title):
+def insert(title:str):
 	if len(title) > 89:
 		print("entry task too much big , please enter summary of task")
 		return
@@ -28,7 +28,7 @@ def list_all():
 	print(x)
 	
 			
-def edit(id,title):
+def edit(id: int,title: str):
 	if len(title) > 89 :
 		print("entry task too much big , please enter summary of task")
 	task = Task(title=title,id=id)
@@ -43,7 +43,7 @@ def edit(id,title):
 	print(x)
 	 
 	
-def delete(id):
+def delete(id:int):
 	try:
 		task = Task(title=None,id=id)
 		task.delete()
@@ -58,7 +58,7 @@ def delete_all():
 	except Error :
 		print(Error)
 
-def done(id):
+def done(id:int):
 	task = Task(title=None,id=id)
 	rows = task.done()
 	x = PrettyTable()
