@@ -1,4 +1,5 @@
 import sqlite3
+import requests
 
 try :
 	conection = sqlite3.connect('todo.db')
@@ -71,3 +72,24 @@ class Task(object):
 			return rows	
 		except Error as e:
 			print(e)
+class User(object):
+	"""docstring for user"""
+	def __init__(self, username,password,email):
+		self.username = username
+		self.password = password
+		self.email = email
+
+	def register(self):
+		data = {
+				'username':self.username,
+				'password':self.password,
+				'email':self.email
+		}
+
+		req = requests.post('http://api.imgod.ir/todo/register/register',data=data)
+		if req.content == b'{"status":200,"message":"user successfully create ."}\n':
+			print("user successfully create")
+
+
+
+		

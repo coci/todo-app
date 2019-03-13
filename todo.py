@@ -3,10 +3,18 @@ import json
 import sqlite3
 from prettytable import PrettyTable
 from task import Task
+from task import User
+import getpass
 
+def user_create():
+	username = input("please enter username : ")
+	password = getpass.getpass('please enter password :')
+	email = input("please enter email : ")
 
+	create = User(username=username,password=password,email=email)
+	create.register()
 
-
+	pass
 def insert(title:str):
 	if len(title) > 89:
 		print("entry task too much big , please enter summary of task")
@@ -72,10 +80,11 @@ def done(id:int):
 		
 
 
-# try:
 if sys.argv[1] == "-insert":
 	task = sys.argv[2]
 	insert(task)
+elif sys.argv[1] == "-create":
+	user_create()
 elif sys.argv[1] == "-list":
 	list_all()
 elif sys.argv[1] == "-edit":
@@ -90,42 +99,4 @@ elif sys.argv[1] == "-clear":
 elif sys.argv[1] == "-done":
 	id = sys.argv[2]
 	done(id)		
-elif sys.argv[1] == "-help":
-	print('''
-+----------------------------------------------------------------+
-|                           ** help **                           |
-+----------------------------------------------------------------+
-|  for add task ==> python3 todo.py -insert 'task description'	 |
-|                                                                |
-|  for list all ==> python3 todo.py -list                        |
-|                                                                |                                                                       |
-|  for edit task ==> python3 todo.py -edit 'id' 'new text'       |
-|                                                                |
-|  for delete task ==> python3 todo.py -delete 'id'              |
-|                                                                |
-|  for clear all entry task ==> python3 todo.py -clear           |
-|                                                                |
-|  for set a task into done state ==> python3 todo.py -done 'id' |
-+----------------------------------------------------------------+
-		''')
-# except Error as e:
-# 	print(e)
-# 	print('''
-# 	+----------------------------------------------------------------+
-# 	|                           ** help **                           |
-# 	+----------------------------------------------------------------+
-# 	|  for add task ==> python3 todo.py -insert 'task description'	 |
-# 	|                                                                |
-# 	|  for list all ==> python3 todo.py -list                        |
-# 	|                                                                |
-# 	|  for show specific task ==> python3 todo.py -show 'id'         |
-# 	|                                                                |
-# 	|  for edit task ==> python3 todo.py -edit 'id' 'new text'       |
-# 	|                                                                |
-# 	|  for delete task ==> python3 todo.py -delete 'id'              |
-# 	|                                                                |
-# 	|  for clear all entry task ==> python3 todo.py -clear           |
-# 	|                                                                |
-# 	|  for set a task into done state ==> python3 todo.py -done 'id' |
-# 	+----------------------------------------------------------------+
-# 		''')
+
