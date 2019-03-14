@@ -1,6 +1,7 @@
 import sqlite3
 import requests
 
+
 try :
 	conection = sqlite3.connect('todo.db')
 except error as e:
@@ -72,12 +73,14 @@ class Task(object):
 			return rows	
 		except Error as e:
 			print(e)
+
 class User(object):
 	"""docstring for user"""
-	def __init__(self, username,password,email):
+	def __init__(self, username,password,email,token):
 		self.username = username
 		self.password = password
 		self.email = email
+		self.token = token
 
 	def register(self):
 		data = {
@@ -86,10 +89,35 @@ class User(object):
 				'email':self.email
 		}
 
-		req = requests.post('http://api.imgod.ir/todo/register/register',data=data)
-		if req.content == b'{"status":200,"message":"user successfully create ."}\n':
-			print("user successfully create")
+		req = requests.post('http://api.imgod.ir/todo/register/register',data=data).json()
+		parse_json = req
+		print(parse_json[0]['message'])
 
-
-
+	def login(self):
+		data = {
+				'username':self.username,
+				'password':self.password,
+		}
+		req = requests.post('http://api.imgod.ir/todo/login/login',data=data).json()
+		json = req
+		if json['message'] == 'user found':
+			print('user found . your now loging')
+			return json['tokenn'][0]['token']
+		if 	json['message'] == 'user not found':
+			print("user not found")
+		
+	def check(self):
+		data = data = {
+				'token':self.token,
+		} 
+		req = requests.post('http://api.imgod.ir/todo/check/check',data=data).json()
+		json = req
+		if json['message'] == 'token found':
+			print(json['tokenn'][0]['username'])
+			return json['tokenn'][0]['username']
+		elif json['message'] == 'token not found':
+			print('token not found . please login')	
+		else:
+			print('something wrong')
+			
 		

@@ -11,10 +11,25 @@ def user_create():
 	password = getpass.getpass('please enter password :')
 	email = input("please enter email : ")
 
-	create = User(username=username,password=password,email=email)
+	create = User(username=username,password=password,email=email,token=None)
 	create.register()
 
-	pass
+def check_user():
+	with open(f'.token.json','r') as f:
+		token = f.read()
+
+	cke = User(username=None, password=None, email=None,token=token)
+	cke.check()
+
+def user_login():
+	username = input('please enter your username : ')
+	password = getpass.getpass('please enter password :')
+	create = User(username=username, password=password, email=None,token=None)
+	token = create.login()
+
+	with open(f'.token.json','w+') as f:
+		f.write(token)
+
 def insert(title:str):
 	if len(title) > 89:
 		print("entry task too much big , please enter summary of task")
@@ -85,6 +100,10 @@ if sys.argv[1] == "-insert":
 	insert(task)
 elif sys.argv[1] == "-create":
 	user_create()
+elif sys.argv[1] == "-check":
+	check_user()	
+elif sys.argv[1] == "-login":
+	user_login()	
 elif sys.argv[1] == "-list":
 	list_all()
 elif sys.argv[1] == "-edit":
