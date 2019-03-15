@@ -10,14 +10,14 @@ def user_create():
 	username = input("please enter username : ")
 	password = getpass.getpass('please enter password :')
 	email = input("please enter email : ")
-
+	check_user()
 	create = User(username=username,password=password,email=email,token=None)
 	create.register()
 
 def check_user():
 	with open(f'.token.json','r') as f:
 		token = f.read()
-
+	#print(token)
 	cke = User(username=None, password=None, email=None,token=token)
 	cke.check()
 

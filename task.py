@@ -16,16 +16,15 @@ class Task(object):
 
 
 	def create(self):
-		try:
-			cursor = conection.cursor()
-			cursor.execute("insert into all_task (task, state) values (?,?)", (self.title,self.state))
-			conection.commit()
-			conection.close()
-			print("Task successfult added .")
-		except Error as e:
-			print(e)
-
-
+		
+		data = {
+				'task' : self.title,
+				'userid' : userid
+		}
+		req = requests.post('http://api.imgod.ir/todo/task/add',data=data).json()
+		parse_json = req
+		print(parse_json['message'])
+		
 
 	def update(self) -> list:
 		conection = sqlite3.connect('todo.db')
@@ -105,15 +104,16 @@ class User(object):
 			return json['tokenn'][0]['token']
 		if 	json['message'] == 'user not found':
 			print("user not found")
-		
+	
+
 	def check(self):
 		data = data = {
 				'token':self.token,
-		} 
+		}
+
 		req = requests.post('http://api.imgod.ir/todo/check/check',data=data).json()
 		json = req
 		if json['message'] == 'token found':
-			print(json['tokenn'][0]['username'])
 			return json['tokenn'][0]['username']
 		elif json['message'] == 'token not found':
 			print('token not found . please login')	
