@@ -14,12 +14,6 @@ def user_create():
 	create = User(username=username,password=password,email=email,token=None)
 	create.register()
 
-def check_user():
-	with open(f'.token.json','r') as f:
-		token = f.read()
-	#print(token)
-	cke = User(username=None, password=None, email=None,token=token)
-	cke.check()
 
 def user_login():
 	username = input('please enter your username : ')
@@ -30,16 +24,27 @@ def user_login():
 	with open(f'.token.json','w+') as f:
 		f.write(token)
 
+
+def check_user():
+	with open(f'.token.json','r') as f:
+		token = f.read()
+	#print(token)
+	cke = User(username=None, password=None, email=None,token=token)
+	userid = cke.check()
+	return userid
+
 def insert(title:str):
 	if len(title) > 89:
 		print("entry task too much big , please enter summary of task")
 		return
-	task = Task(title=title,id=None)
+	userid = check_user()
+	task = Task(title=title,id=None,userid=userid)
 	task.create()
 
 
 def list_all():
 	rows = Task.get_all()
+	print(rows)
 	x = PrettyTable()
 	x.field_names = ['id','task','state']
 	for i in range(len(rows)):

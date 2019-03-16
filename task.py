@@ -9,17 +9,17 @@ except error as e:
 
 class Task(object):
 	"""docstring for Task"""
-	def __init__(self, title, id):
+	def __init__(self, title, id,userid):
 		self.title = title
 		self.id = id
 		self.state = 'pending' # pending, done, deleted
-
+		self.userid = userid
 
 	def create(self):
 		
 		data = {
 				'task' : self.title,
-				'userid' : userid
+				'userid' : self.userid
 		}
 		req = requests.post('http://api.imgod.ir/todo/task/add',data=data).json()
 		parse_json = req
