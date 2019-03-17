@@ -8,7 +8,7 @@ except error as e:
 	print(e)
 
 class Task(object):
-	"""docstring for Task"""
+	"""this is where all magic happen , create task , show all task ,......"""
 	def __init__(self, title, id,userid):
 		self.title = title
 		self.id = id
@@ -16,6 +16,11 @@ class Task(object):
 		self.userid = userid
 
 	def create(self):
+		'''
+		this send given information to server ( create task) .
+		title : task ( we got from user )
+		userid : this tell server which user create this task ( we got this from token file from user os)
+		'''
 		
 		data = {
 				'task' : self.title,
@@ -27,15 +32,17 @@ class Task(object):
 		
 
 	def update(self) -> list:
-		conection = sqlite3.connect('todo.db')
-		cursor = conection.cursor()
-		cursor.execute("UPDATE all_task SET task='%s' WHERE rowid = %s"%(self.title,self.id))
-		conection.commit()
-		print("task successfully updated and here is approval :")
-		cursor.execute("SELECT rowid,task,state FROM all_task WHERE rowid = %s"%(self.id))
-		rows = cursor.fetchall()
-		conection.close()
-		return rows
+		data = {
+				'task' : self.title,
+				'id'	: self.id,
+				'userid' : self.userid
+		}
+		req = requests.post('http://api.imgod.ir/todo/task/update',data=data).json()
+		parse_json = req
+		print(parse_json)
+
+
+
 
 	def done(self) -> list:
 		conection = sqlite3.connect('todo.db')
@@ -49,10 +56,13 @@ class Task(object):
 		return rows
 
 	def delete(self):
-		cursor = conection.cursor()
-		cursor.execute("DELETE FROM all_task WHERE rowid = %s"%(self.id))
-		conection.commit()
-		conection.close()
+		data = {
+				'id'	: self.id,
+				'userid' : self.userid
+		}
+		req = requests.post('http://api.imgod.ir/todo/task/delete',data=data).json()
+		parse_json = req
+		print(parse_json)
 
 		
 	@staticmethod
@@ -63,18 +73,21 @@ class Task(object):
 		conection.close()
 		print("All task are successfully deleted")
 
-	@staticmethod
-	def get_all() -> list:
-		try:
-			cursor = conection.cursor()
-			cursor.execute("SELECT rowid,task,state FROM all_task")
-			rows = cursor.fetchall()
-			return rows	
-		except Error as e:
-			print(e)
+	def get_all(self) -> list:
+		data = {
+				'userid' : self.userid
+		}
+		req = requests.post('http://api.imgod.ir/todo/task/show',data=data).json()
+		parse_json = req
+		return parse_json
 
 class User(object):
-	"""docstring for user"""
+	"""handle all information about user , such as :
+	1. register user
+	2. login user
+	3. check user
+
+	"""
 	def __init__(self, username,password,email,token):
 		self.username = username
 		self.password = password
@@ -92,17 +105,19 @@ class User(object):
 		parse_json = req
 		print(parse_json[0]['message'])
 
+
+
 	def login(self):
 		data = {
 				'username':self.username,
 				'password':self.password,
 		}
 		req = requests.post('http://api.imgod.ir/todo/login/login',data=data).json()
-		json = req
-		if json['message'] == 'user found':
+		parse_json = req
+		if parse_json['message'] == 'user found':
 			print('user found . your now loging')
-			return json['tokenn'][0]['token']
-		if 	json['message'] == 'user not found':
+			return parse_json['tokenn'][0]['token']
+		if 	parse_json['message'] == 'user not found':
 			print("user not found")
 	
 
@@ -112,10 +127,10 @@ class User(object):
 		}
 
 		req = requests.post('http://api.imgod.ir/todo/check/check',data=data).json()
-		json = req
-		if json['message'] == 'token found':
-			return json['tokenn'][0]['username']
-		elif json['message'] == 'token not found':
+		parse_json = req
+		if parse_json['message'] == 'token found':
+			return parse_json['tokenn'][0]['username']
+		elif parse_json['message'] == 'token not found':
 			print('token not found . please login')	
 		else:
 			print('something wrong')
